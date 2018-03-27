@@ -1,0 +1,67 @@
+unit UEncryption;
+
+interface
+
+uses
+    StdCtrls, Classes, Vcl.Dialogs, Vcl.Controls;
+
+type
+    TEncryption = class(TMemo)
+    protected
+        FKey: String;
+        FLog: TextFile;
+        FChanged: Boolean;
+    public
+        constructor Create(C: TComponent);
+        procedure Encrypt(); virtual; abstract;
+        procedure Decrypt(); virtual; abstract;
+        procedure SetKey(Value: String); virtual; abstract;
+        procedure OpenFile(var Open: TOpenDialog);
+        procedure SaveFile(var Save: TSaveDialog);
+    published
+        property Key: String read FKey write SetKey;
+        property Log: TextFile read FLog write FLog;
+        property Changed: Boolean read FChanged write FChanged;
+    end;
+
+implementation
+
+constructor TEncryption.Create(C: TComponent);
+begin
+    inherited Create(C);
+    Top := 10;
+    Left := 5;
+    Width := 355;
+    Height := 170;
+    ScrollBars := ssVertical;
+end;
+
+procedure TEncryption.OpenFile(var Open: TOpenDialog);
+begin
+    if (Changed) then
+        if (MessageDlg('Discard changes?',
+            mtWarning, [mbYes, mbNo], 0)=mrNo) then begin
+            SaveFile();
+            Exit;
+        end;
+    if (Open.Execute()) then begin
+        AssignFile(CriptCaesar.Log, Open.FileName);
+        Reset(CriptCaesar.Log);
+        CriptCaesar.Clear;
+        try
+            while not Eof(CriptCaesar.Log) do begin
+                Readln(CriptCaesar.Log, texto);
+                CriptCaesar.Lines.Add(texto);
+            end;
+        finally
+            CloseFile(CriptCaesar.Log);
+        end;
+    end;
+end;
+
+procedure TEncryption.SaveFile;
+begin
+
+end;
+
+end.

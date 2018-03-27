@@ -1,0 +1,21 @@
+unit UEnigma;
+
+interface
+
+uses UEncryption
+
+type
+    Enigma = class(TEncryption)
+    private
+
+    protected
+
+    public
+
+    published
+
+    end;
+
+implementation
+
+end.

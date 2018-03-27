@@ -1,0 +1,121 @@
+unit UMain;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.Buttons, Vcl.StdCtrls,
+  UVigenere, UCaesar;
+
+type
+  TFMain = class(TForm)
+    FieldKey: TEdit;
+    btnQuit: TSpeedButton;
+    PageControl1: TPageControl;
+    TabVigenere: TTabSheet;
+    Label1: TLabel;
+    Open: TOpenDialog;
+    Save: TSaveDialog;
+    TabCaesar: TTabSheet;
+    btnOpenFile1: TButton;
+    btnSave1: TButton;
+    btnEncrypt1: TButton;
+    btnDecrypt1: TButton;
+    btnDecrypt2: TButton;
+    btnEncrypt2: TButton;
+    btnSave2: TButton;
+    btnOpenFile2: TButton;
+    procedure btnQuitClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure btnEncrypt1Click(Sender: TObject);
+    procedure btnOpenFile1Click(Sender: TObject);
+    procedure btnSave1Click(Sender: TObject);
+    procedure btnDecrypt1Click(Sender: TObject);
+    procedure btnOpenFile2Click(Sender: TObject);
+    procedure btnSave2Click(Sender: TObject);
+    procedure btnEncrypt2Click(Sender: TObject);
+    procedure btnDecrypt2Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FMain: TFMain;
+  CriptVigenere: TVigenere;
+  CriptCaesar: TCaesar;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFMain.btnEncrypt1Click(Sender: TObject);
+begin
+    CriptVigenere.SetKey(FieldKey.Text);
+    if (FieldKey.Text='') then begin MessageDlg('Please, enter a Key!', mtError, [mbOK], 0); Exit; end;
+    if (CriptVigenere.Key<>'') then CriptVigenere.Encrypt();
+end;
+
+procedure TFMain.btnEncrypt2Click(Sender: TObject);
+begin
+    CriptCaesar.SetKey(FieldKey.Text);
+    if (FieldKey.Text='') then begin MessageDlg('Please, enter a Key!', mtError, [mbOK], 0); Exit; end;
+    if (CriptCaesar.Key<>'') then CriptCaesar.Encrypt();
+end;
+
+procedure TFMain.btnDecrypt1Click(Sender: TObject);
+begin
+    CriptVigenere.SetKey(FieldKey.Text);
+    if (FieldKey.Text='') then begin MessageDlg('Please, enter a Key!', mtError, [mbOK], 0); Exit; end;
+    if (CriptVigenere.Key<>'') then CriptVigenere.Decrypt();
+end;
+
+procedure TFMain.btnDecrypt2Click(Sender: TObject);
+begin
+    CriptCaesar.SetKey(FieldKey.Text);
+    if (FieldKey.Text='') then begin MessageDlg('Please, enter a Key!', mtError, [mbOK], 0); Exit; end;
+    if (CriptCaesar.Key<>'') then CriptCaesar.Decrypt();
+end;
+
+procedure TFMain.btnOpenFile1Click(Sender: TObject);
+var texto: String;
+begin
+    CriptVigenere.OpenFile(Open, Save);
+end;
+
+procedure TFMain.btnOpenFile2Click(Sender: TObject);
+var texto: String;
+begin
+    CriptCaesar.OpenFile(Open, Save);
+end;
+
+procedure TFMain.btnSave1Click(Sender: TObject);
+var line: Integer;
+begin
+    CriptVigenere.SaveFile(Save);
+end;
+
+procedure TFMain.btnSave2Click(Sender: TObject);
+var line: Integer;
+begin
+    CriptCaesar.SaveFile(Save);
+end;
+
+procedure TFMain.btnQuitClick(Sender: TObject);
+begin
+    CriptVigenere.Free;
+    CriptCaesar.Free;
+    Self.Close;
+end;
+
+procedure TFMain.FormShow(Sender: TObject);
+begin
+    CriptVigenere := TVigenere.Create(FMain);
+    CriptVigenere.Parent := TabVigenere;
+    CriptVigenere.SetFocus;
+    CriptCaesar := TCaesar.Create(FMain);
+    CriptCaesar.Parent := TabCaesar;
+end;
+
+end.
